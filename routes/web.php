@@ -3,10 +3,21 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return inertia('Home', ['time' => date('H:i:s, d M Y'),]);
+  return inertia('Home');
 });
 
-/* 
-Note:
-Using 'intertia()' saves having to use 'Inertia::render()', which requires a 'use Inertia\ Inertia;' import.
-*/
+Route::get('/users', function () {
+    /* Demo progress indicator */
+    // sleep(2);
+    return inertia('Users', [
+      'time' => date('H:i:s')
+    ]);
+});
+
+Route::get('/settings', function () {
+    return inertia('Settings');
+});
+
+Route::post('/logout', function () {
+    dd("'action' param being passed from 'Nav.vue' Link button: " . request('action'));
+});
