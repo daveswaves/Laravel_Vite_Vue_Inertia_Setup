@@ -1,0 +1,145 @@
+Laravel, Vite, Vue, Inertia Setup
+https://youtu.be/Yp4SifzmRu4 Getting Started with Inertia, Vite & Vue 3 [Setup Guide]
+
+composer create-project laravel/laravel:^9.0  LVL_VUE_VITE_INERTIA
+
+cd LVL_VUE_VITE_INERTIA
+
+Copy code to vite.config.js:
+-----------------------------------------
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue'; // copied from https://laravel.com/docs/9.x/vite#vue
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: true,
+        }),
+        // copied from https://laravel.com/docs/9.x/vite#vue
+        vue({
+            template: {
+                transformAssetUrls: {
+                    // The Vue plugin will re-write asset URLs, when referenced
+                    // in Single File Components, to point to the Laravel web
+                    // server. Setting this to `null` allows the Laravel plugin
+                    // to instead re-write asset URLs to point to the Vite
+                    // server instead.
+                    base: null,
+ 
+                    // The Vue plugin will parse absolute URLs and treat them
+                    // as absolute paths to files on disk. Setting this to
+                    // `false` will leave absolute URLs un-touched so they can
+                    // reference assets in the public directory as expected.
+                    includeAbsolute: false,
+                },
+            },
+        }),
+    ],
+});
+-----------------------------------------
+
+Install Vue: npm i vue
+
+Install: npm i @vitejs/plugin-vue
+
+Install Inertia: composer require inertiajs/inertia-laravel
+
+Create: resoucres/views/app.blade.php file and copy code:
+-----------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    @vite('resources/js/app.js')
+    @inertiaHead
+  </head>
+  <body>
+    @inertia
+  </body>
+</html>
+-----------------------------------------
+
+Install Inertia Middleware: php artisan inertia:middleware
+(creates app/Http/Middleware/HandleInertiaRequests.php)
+
+Add Middleware to 'app/Http/Kernel.php' file:
+-----------------------------------------
+'web' => [
+    // ...
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+],
+-----------------------------------------
+
+Install Vue3 Inertia Adapter: npm install @inertiajs/vue3
+
+App code (resources/js/app.js): 
+-----------------------------------------
+import { createApp, h } from 'vue';
+import { createInertiaApp } from '@inertiajs/vue3';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+ 
+createInertiaApp({
+  resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+  setup({ el, App, props, plugin }) {
+    return createApp({ render: () => h(App, props) })
+      .use(plugin)
+      .mount(el)
+  },
+});
+-----------------------------------------
+
+Add web routes code (routes/web.php):
+-----------------------------------------
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return inertia('Welcome', ['name' => 'David',]);
+});
+
+/* 
+Note:
+Using 'intertia()' saves having to use 'Inertia::render()', which required an import: 'use Inertia\ Inertia;'
+*/
+-----------------------------------------
+
+Create 'resources/js/Pages/Welcome.vue' file:
+-----------------------------------------
+<script>
+export default {
+    props: {
+        name: String,
+    },
+};
+</script>
+
+<template>
+    <p>Laravel | Vue | Vite | Inertia</p>
+    <p>Output from <b>resources/js/Pages/Welcome.vue</b></p>
+    <p>Hello {{ name }}</p>
+</template>
+-----------------------------------------
+
+Start Laravel: $ php artisan serve
+The Start Vite development server: $ npm run dev
+
+
+
+
+#########################################
+
+If you need to install Ziggy to use named routes:
+
+https://youtu.be/Yp4SifzmRu4?t=617
+
+https://github.com/tighten/ziggy
+
+
+
+Also check out https://laravel.com/docs/9.x/starter-kits#breeze-and-inertia
+
+Build a microblogging platform: https://bootcamp.laravel.com/
