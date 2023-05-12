@@ -1,5 +1,6 @@
 <script>
-import Layout from "../Shared/Layout.vue";
+// Uses a different layout to the default used by the other pages.
+import Layout from "../Shared/Layout2.vue";
 
 export default {
   layout: Layout
