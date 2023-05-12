@@ -10,6 +10,6 @@ $ php artisan serve
 
 $ npm run dev
 
-Server running on [ http://127.0.0.1:8000 ]
+Server running on [ (http://localhost:8000)[http://localhost:8000] ]
 
-Vite development server  [ http://localhost:5173 ]
+Vite development server  [ (http://localhost:5173)[http://localhost:5173] ]
