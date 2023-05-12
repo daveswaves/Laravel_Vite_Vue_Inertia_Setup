@@ -1,10 +1,14 @@
 <script>
+import { Head } from '@inertiajs/vue3';
+
 export default {
   props: { time: String},
 };
 </script>
 
 <template>
+  <Head><title>My App - Users</title></Head>
+  
   <h1 class="text-3xl">Users</h1>
 
   <p>Scroll down to checkout time and preserve-scroll refresh link.</p>
