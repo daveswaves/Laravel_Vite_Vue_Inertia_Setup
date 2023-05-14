@@ -16,7 +16,8 @@ Route::get('/users', function () {
       Use map() to only return required field(s).
       */
       'users' => User::all()->map(fn($user) => [
-        'name' => $user->name
+        'id' => $user->id,
+        'name' => $user->name,
       ])
     ]);
 });
