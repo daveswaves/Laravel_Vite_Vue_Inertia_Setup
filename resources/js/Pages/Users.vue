@@ -1,8 +1,27 @@
 <script setup>
 import Pagination from '../Shared/Pagination.vue';
+import { ref, watch } from 'vue';
+// import { Inertia } from '@inertiajs/inertia';
+import { router } from "@inertiajs/vue3";
 
-const props = defineProps({ users: Object });
-// const props = defineProps({ users: Array });
+
+let props = defineProps({
+  users: Object,
+  // search string passed from routes web
+  filters: Object
+});
+
+// props.filters.search is the search string.
+// Search input retains its search string from page to page (pagination)
+let search = ref(props.filters.search);
+
+watch(search, value => {
+  router.get("/users", { search: value }, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true // stops every single search character being added to browser history
+  });
+})
 </script>
 
 <template>
@@ -10,7 +29,13 @@ const props = defineProps({ users: Object });
     <title>Users</title>
   </Head>
   
-  <h1 class="text-3xl">Users</h1>
+  <div class="flex justify-between mb-6">
+    <h1 class="text-3xl">Users</h1>
+
+    <!-- Filter -->
+    <input v-model="search" type="text" placeholder="Search..." class="border px-2 rounded-lg">
+  </div>
+
   <!-- 
     Nb. The tutorial grabs this CSS from 'https://tailwindui.com/components/application-ui/lists/tables'.
         This is no longer free code (£100 plus). This table HTML/CSS was copied from the tutorial.
