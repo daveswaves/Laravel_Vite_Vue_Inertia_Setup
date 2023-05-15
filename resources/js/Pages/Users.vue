@@ -1,5 +1,8 @@
 <script setup>
-const props = defineProps({ users: Array });
+import Pagination from '../Shared/Pagination.vue';
+
+const props = defineProps({ users: Object });
+// const props = defineProps({ users: Array });
 </script>
 
 <template>
@@ -18,7 +21,7 @@ const props = defineProps({ users: Array });
         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
           <table class="min-w-full divide-y divide-gray-200">
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="user in users" :key="user.id">
+              <tr v-for="user in users.data" :key="user.id">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
                     <div>
@@ -39,4 +42,6 @@ const props = defineProps({ users: Array });
       </div>
     </div>
   </div>
+
+  <Pagination :links="users.links" class="mt-3" />
 </template>
