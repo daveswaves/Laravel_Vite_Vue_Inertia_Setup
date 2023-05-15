@@ -3,6 +3,9 @@ import Pagination from '../Shared/Pagination.vue';
 import { ref, watch } from 'vue';
 // import { Inertia } from '@inertiajs/inertia';
 import { router } from "@inertiajs/vue3";
+// Assumes 'lodash' is installed - exists in 'package.json' if so.
+import throttle from 'lodash/throttle';
+// import debounce from 'lodash/debounce';
 
 
 let props = defineProps({
@@ -15,13 +18,13 @@ let props = defineProps({
 // Search input retains its search string from page to page (pagination)
 let search = ref(props.filters.search);
 
-watch(search, value => {
+watch(search, debounce(function (value) {
   router.get("/users", { search: value }, {
     preserveState: true,
     preserveScroll: true,
-    replace: true // stops every single search character being added to browser history
+    replace: true
   });
-})
+}, 500));
 </script>
 
 <template>
